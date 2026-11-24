@@ -1,0 +1,43 @@
+# Entornos locales de Python
+.venv/
+venv/
+env/
+
+# Cachés y archivos generados de Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+build/
+dist/
+*.egg-info/
+
+# Credenciales y configuración privada
+.env
+.env.*
+!.env.example
+.streamlit/secrets.toml
+
+# PMS cargados, ejemplos Excel y resultados generados
+# El catálogo CSV sí se publica: es necesario para la aplicación.
+*.xlsx
+*.xlsm
+*.xls
+~$*
+/outputs/
+/uploads/
+/.tmp*/
+*.log
+
+# Configuración local del editor y archivos del sistema
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Se publican .streamlit/config.toml y catalogo/materiales_aportacion.csv.
