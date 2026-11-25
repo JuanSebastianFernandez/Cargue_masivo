@@ -13,7 +13,7 @@ from cargue_agp import (
     generar_excel, normalizar_tam,
 )
 
-VERSION = "1.0.0"
+VERSION = "1.0.1"
 ESTILOS = """
 <style>
 .block-container {max-width:1180px;padding-top:2.5rem;padding-bottom:2.5rem;}
@@ -52,6 +52,17 @@ def cambiar_archivo() -> None:
     st.session_state.pop("lectura", None)
 
 
+def reiniciar_cargue() -> None:
+    cambiar_archivo()
+    # Un nuevo identificador recrea el selector y retira el archivo anterior.
+    # Streamlit no permite asignar directamente el valor de un file_uploader.
+    st.session_state["numero_cargue"] = st.session_state.get("numero_cargue", 0) + 1
+    st.session_state["nivel"] = "MT"
+    st.session_state["codigo_base"] = ""
+    st.session_state["sufijo"] = None
+    st.session_state["tam"] = ""
+
+
 def mayusculas(campo: str) -> None:
     st.session_state[campo] = st.session_state[campo].strip().upper()
     limpiar_resultado()
@@ -84,6 +95,9 @@ def main() -> None:
     with st.sidebar:
         st.markdown("### Cargue AGP")
         st.caption("Generador de archivos de valorización")
+        st.button("Nuevo cargue", key="nuevo_cargue", on_click=reiniciar_cargue,
+                  icon=":material/restart_alt:", width="stretch",
+                  help="Limpia el archivo, la ubicación, el TAM y el resultado para empezar con otro PMS.")
         st.divider()
         st.markdown("**Cómo preparar el cargue**")
         st.markdown("1. Cargue el PMS.\n2. Diligencie ubicación técnica y TAM.\n3. Revise y descargue el Excel.")
@@ -106,7 +120,8 @@ def main() -> None:
         with st.container(border=True):
             seccion(1, "Archivo de origen")
             st.caption("Cargue el RG11 o E1. El nombre del archivo puede ser cualquiera.")
-            archivo = st.file_uploader("Archivo PMS", type=["xlsx", "xlsm"], key="pms",
+            archivo = st.file_uploader("Archivo PMS", type=["xlsx", "xlsm"],
+                                       key=f"pms_{st.session_state.get('numero_cargue', 0)}",
                                        on_change=cambiar_archivo,
                                        help=f"Máximo {MAX_ARCHIVO_MB} MB. No admite Excel .xls.")
             st.caption("Las cantidades repetidas se suman por código. El catálogo se aplica automáticamente.")
@@ -188,7 +203,7 @@ def main() -> None:
             if pendiente:
                 st.info("Complete el código base, la estructura de ubicación y el TAM para generar el archivo.")
             if st.button("Generar archivo de cargue", type="primary", disabled=pendiente is not None,
-                         width="stretch", icon=":material/file_save:"):
+                         key="generar_cargue", width="stretch", icon=":material/file_save:"):
                 limpiar_resultado()
                 try:
                     contenido_excel = generar_excel(resumen, nivel, base, sufijo, tam)
@@ -217,6 +232,8 @@ def main() -> None:
                                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                                    on_click="ignore", type="primary", width="stretch",
                                    icon=":material/download:")
+                st.button("Nuevo cargue", key="nuevo_cargue_resultado", on_click=reiniciar_cargue,
+                          icon=":material/restart_alt:", width="stretch")
     st.markdown('<div class="agp-footer">Dirección AGP · Cargue de materiales y prestaciones</div>',
                 unsafe_allow_html=True)
 

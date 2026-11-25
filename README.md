@@ -24,6 +24,10 @@ También puede ejecutar `iniciar.ps1` después de instalar las dependencias.
 3. Diligencie el TAM. La aplicación lo transforma a mayúsculas.
 4. Revise los códigos consolidados y los materiales excluidos.
 5. Pulse **Generar archivo de cargue**, revise la vista previa y descargue el Excel.
+6. Pulse **Nuevo cargue**, en la barra lateral o debajo de la descarga, para procesar otro PMS sin recargar la página.
+
+**Nuevo cargue** limpia el archivo, la lectura, los errores, la ubicación técnica, el TAM
+y el resultado anterior. El nivel de tensión vuelve a MT y el catálogo de aportación permanece disponible.
 
 Un cambio de archivo, catálogo, tensión, código base, estructura o TAM retira la descarga anterior.
 Los archivos se procesan en memoria y cada sesión conserva su propio resultado.
